@@ -29,9 +29,19 @@ public class UIPRS
 }
 
 
-public class Utils
+public class Utils : MonoBehaviour
 {
+    [SerializeField] public static RectTransform canvasRectTransform;
     public static Quaternion QI => Quaternion.identity;
+
+    void Awake()
+    {
+        if (canvasRectTransform == null)
+        {
+            canvasRectTransform = GameObject.Find("Canvas").GetComponent<RectTransform>();
+        }
+    }
+
 
     public static Vector3 MousePos
     {
@@ -41,5 +51,17 @@ public class Utils
             result.z = -10;
             return result;
         }
+    }
+
+    public static Vector3 UIMousePos()
+    {
+        if (canvasRectTransform == null)
+        {
+            canvasRectTransform = GameObject.Find("Canvas").GetComponent<RectTransform>();
+        }
+
+        Vector2 result;
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(canvasRectTransform, Input.mousePosition, null, out result);
+        return result;
     }
 }

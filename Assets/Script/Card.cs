@@ -2,22 +2,33 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using DG.Tweening;
+using UnityEngine.EventSystems;
 
-public class Card : MonoBehaviour
+public class Card : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler
 {
     [SerializeField] Image card;
     [SerializeField] Image character;
     [SerializeField] TMP_Text nameTMP;
     [SerializeField] TMP_Text attackTMP;
 
+    [SerializeField] GraphicRaycaster raycaster;
+    [SerializeField] EventSystem eventSystem;
+    public Canvas canvas;
+
     public Item item;
     public PRS originPRS;
+    public int originIndex;
 
     RectTransform rectTransform;
+    bool isEnter;
 
     void Awake()
     {
-        rectTransform = GetComponent<RectTransform>();   
+        rectTransform = GetComponent<RectTransform>(); 
+        canvas = GetComponentInParent<Canvas>();
+        originIndex = transform.GetSiblingIndex();
+        if (eventSystem == null)
+            eventSystem = EventSystem.current;
     }
 
     public void Setup(Item item)
@@ -56,4 +67,48 @@ public class Card : MonoBehaviour
     {
         
     }
+
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        isEnter = true;
+        CardManager.Inst.CardMouseOver(this);
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        isEnter =false;
+        CardManager.Inst.CardMouseExit(this);
+    }
+    public void OnPointerDown(PointerEventData eventData)
+    {
+        // UI에서 마우스를 눌렀을 때
+        CardManager.Inst.CardMouseDown();
+    }
+
+    public void OnPointerUp(PointerEventData eventData)
+    {
+        // UI에서 마우스를 뗐을 때
+        CardManager.Inst.CardMouseUp();
+    }
+
+
+    /* void OnMouseOver()
+     {
+         CardManager.Inst.CardMouseOver(this);
+     }
+
+     void OnMouseExit()
+     {
+         CardManager.Inst.CardMouseExit(this);   
+     } */
+
+    /*  void OnMouseDown()
+      {
+          CardManager.Inst.CardMouseDown();
+      }
+
+      void OnMouseUp()
+      {
+          CardManager.Inst.CardMouseUp();
+      } */
 }

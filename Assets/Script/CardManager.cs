@@ -1,6 +1,9 @@
 using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
+using System;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 
 public class CardManager : MonoBehaviour
@@ -14,16 +17,23 @@ public class CardManager : MonoBehaviour
     [SerializeField] RectTransform myCardLeft;
     [SerializeField] RectTransform myCardRight;
     [SerializeField] RectTransform myCardSet;
+    [SerializeField] GraphicRaycaster raycaster;
+    [SerializeField] EventSystem eventSystem;
 
 
 
     List<Item> itemBuffer;
+    Card selectCard;
     PRS myCardSetPRS;
+    bool isMyCardDrag;
+    bool onMyCardArea;
 
     void Awake()
     {
         Inst = this;
         myCardSetPRS = new PRS(myCardSet.anchoredPosition, Quaternion.identity, Vector3.one);
+        if (eventSystem == null)
+            eventSystem = EventSystem.current;
     }
 
     public Item PopItem()
@@ -89,8 +99,13 @@ public class CardManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if(isMyCardDrag)
+            CardDrag();
+
         if(Input.GetKeyDown(KeyCode.Keypad1))
             AddCard();
+
+        DetectCardArea();
     }
 
     void SetOriginOrder()
@@ -208,6 +223,107 @@ public class CardManager : MonoBehaviour
         
     }
 
+    #region MyCard
 
+    public void CardMouseOver(Card card)
+    {
+        // if(eCardState == ECardState.Nothing) return;
+        selectCard = card;
+        EnlargeCard(true, card);
+        card.transform.SetAsLastSibling();
+    }
+
+    public void CardMouseExit(Card card)
+    {
+        EnlargeCard(false, card);
+        // 원래 위치로 복귀..
+        card.transform.SetSiblingIndex(card.originIndex);
+    }
+
+    public void CardMouseDown()
+    {
+        // if(eCardState != ECardState.CanMouseDrag){
+        //     return;
+        // }
+        isMyCardDrag = true;
+    }
+
+    public void CardMouseUp()
+    {
+        isMyCardDrag = false;
+
+        // if(eCardState != ECardState.CanMouseDrag){
+        //     return;
+        // }
+
+        // if(onMyCardArea)
+        //     EntityManager.Inst.RemoveMyEmptyEntity();
+        // else {
+        //     TryPutCard(true);
+        // }
+    }
+
+    void CardDrag()
+    {
+        // if(eCardState != ECardState.CanMouseDrag)
+        //     return;
+
+        //     Debug.Log(selectCard )
+        // if(!onMyCardArea)
+        // {
+        //     selectCard.MoveTransform(new PRS(Utils.Inst.UIMousePos(), Utils.QI, selectCard.originPRS.scale), false);
+        //     // EntityManager.Inst.InsertMyEmptyEntity(Utils.MousePos.x);
+        // }
+        if (selectCard != null)
+        {
+
+            if (!onMyCardArea)
+            {
+
+                selectCard.MoveTransform(new PRS(Utils.UIMousePos(), Utils.QI, selectCard.originPRS.scale), false);
+            }
+        }
+    }
+
+
+    void DetectCardArea()
+    {
+        PointerEventData pointerEventData = new PointerEventData(eventSystem);
+        pointerEventData.position = Input.mousePosition;
+
+        List<RaycastResult> results = new List<RaycastResult>();
+        raycaster.Raycast(pointerEventData, results);
+
+        int layer = LayerMask.NameToLayer("MyCardArea");
+        onMyCardArea = results.Exists(result => result.gameObject.layer == layer);
+    }
+
+    void EnlargeCard(bool isEnlarge, Card card)
+    {
+        if(isEnlarge)
+        {
+            Vector3 enlargePos = new Vector3(card.originPRS.pos.x, -120f, -10f);
+            card.MoveTransform(new PRS(enlargePos, Utils.QI, Vector3.one * 1.5f), false);
+        }
+        else
+            card.MoveTransform(card.originPRS, false);
+        
+        card.GetComponent<Order>().SetMostFrontOrder(isEnlarge);
+    }
+
+    void SetECardState()
+    {
+        // if(TurnManager.Inst.isLoading)
+        //     eCardState = ECardState.Nothing;
+        // else if(!TurnManager.Inst.myTurn || myPutCount == 1 || EntityManager.Inst.IsFullMyEntities)
+        //     eCardState = ECardState.CanMouseOver;
+        // else if(TurnManager.Inst.myTurn && myPutCount == 0)
+        //     eCardState = ECardState.CanMouseDrag;
+    }
+
+
+
+
+    #endregion
     
 }

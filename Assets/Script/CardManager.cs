@@ -261,6 +261,9 @@ public class CardManager : MonoBehaviour
         // else {
         //     TryPutCard(true);
         // }
+
+        // 제자리로 천천히 이동
+        selectCard.MoveTransform(selectCard.originPRS, true, 0.4f);
     }
 
     void CardDrag()

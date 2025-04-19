@@ -7,6 +7,10 @@ public class Enemy : MonoBehaviour
     [SerializeField] TMP_Text nameTMP;
     [SerializeField] TMP_Text healthTMP;
 
+    [SerializeField] 
+
+    Animator anim;
+
     
     public int health;
     public bool isDie;
@@ -19,7 +23,7 @@ public class Enemy : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        anim = GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -32,10 +36,11 @@ public class Enemy : MonoBehaviour
     public bool Damaged(int damage)
     {
         health -= damage;
-        healthTMP.text = health.ToString();
+        // healthTMP.text = health.ToString();
 
         if(health < 0){
             isDie = true;
+            Dead();
             return true;
         }
         return false;
@@ -69,6 +74,21 @@ public class Enemy : MonoBehaviour
         Debug.Log("onmouseup 실행됨!");
         // EntityManager.Inst.EntityMouseUp();
         EnemyManager.Inst.EnemyMouseUp();
+    }
 
+    void Dead()
+    {
+        // animation 죽음 처리
+        anim.SetTrigger("Dead");
+
+        // 죽으면 아이템을 떨궈야지 ?? 
+        DropItem();
+
+    }
+
+    void DropItem()
+    {
+        //if(itemPrefab == null) return ;
+        
     }
 }

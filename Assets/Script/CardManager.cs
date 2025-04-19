@@ -233,7 +233,7 @@ public class CardManager : MonoBehaviour
         sequence.AppendCallback(() =>
         {
             // 데미지를 주자
-            //enemy.Damaged(card.item.attack);
+            enemy.Damaged(card.item.attack);
 
             Vector3 damagePos = enemy.transform.position;
             damagePos += new Vector3(0.0f, 1.0f, 0.0f);

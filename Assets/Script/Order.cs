@@ -1,24 +1,16 @@
 using UnityEngine;
-using UnityEngine.UI;
 
 [CreateAssetMenu(fileName = "Order", menuName = "Scriptable Objects/Order")]
 public class Order : MonoBehaviour
 {
-    [SerializeField] Graphic[] backGraphics;
-    [SerializeField] Graphic[] middleGraphics;
+    [SerializeField] Renderer[] backRenderers;
+    [SerializeField] Renderer[] middleRenderers;
     [SerializeField] string sortingLayerName;
     int originOrder;
 
-    private Canvas canvas;
-
-    void Awake()
-    {
-        canvas = GetComponentInParent<Canvas>();   
-    }
 
 
-
-    public void SetOriginOrder(int originOrder)
+  public void SetOriginOrder(int originOrder)
   {
     this.originOrder = originOrder;
     SetOrder(originOrder);
@@ -31,15 +23,15 @@ public class Order : MonoBehaviour
     {
       int mulOrder = order * 10;
 
-      foreach (var graphic in backGraphics){
-        canvas.sortingLayerName = sortingLayerName;
-        canvas.sortingOrder = mulOrder;
+      foreach (var renderer in backRenderers){
+        renderer.sortingLayerName = sortingLayerName;
+        renderer.sortingOrder = mulOrder;
       }
 
-      foreach ( var renderer in middleGraphics)
+      foreach ( var renderer in middleRenderers)
       {
-        canvas.sortingLayerName = sortingLayerName;
-        canvas.sortingOrder = mulOrder + 1;
+        renderer.sortingLayerName = sortingLayerName;
+        renderer.sortingOrder = mulOrder + 1;
       }
     }
 

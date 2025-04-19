@@ -19,13 +19,15 @@ public class CardManager : MonoBehaviour
     [SerializeField] RectTransform myCardSet;
     [SerializeField] GraphicRaycaster raycaster;
     [SerializeField] EventSystem eventSystem;
+    [SerializeField] GameObject damagePrefab;
+
 
 
 
     List<Item> itemBuffer;
-    Card selectCard;
+    public Card selectCard;
     PRS myCardSetPRS;
-    bool isMyCardDrag;
+    public bool isMyCardDrag;
     bool onMyCardArea;
 
     void Awake()
@@ -223,6 +225,34 @@ public class CardManager : MonoBehaviour
         
     }
 
+
+    void Attack(Enemy enemy, Card card)
+    {
+        Sequence sequence = DOTween.Sequence();
+        // sequence.Append()
+        sequence.AppendCallback(() =>
+        {
+            // 데미지를 주자
+            //enemy.Damaged(card.item.attack);
+
+            Vector3 damagePos = enemy.transform.position;
+            damagePos += new Vector3(0.0f, 1.0f, 0.0f);
+            // 데미지 이펙트 추가
+            SpawnDamage(card.item.attack, damagePos);
+
+        });
+    }
+
+    void SpawnDamage(int damage, Vector3 pos)
+    {
+        if(damage <= 0)
+            return;
+
+        var damageComponent = Instantiate(damagePrefab).GetComponent<Damage>();
+        damageComponent.SetupTransform(pos, damageComponent.transform);
+        damageComponent.Damaged(damage);
+    }
+
     #region MyCard
 
     public void CardMouseOver(Card card)
@@ -236,6 +266,7 @@ public class CardManager : MonoBehaviour
     public void CardMouseExit(Card card)
     {
         EnlargeCard(false, card);
+        selectCard = null;
         // 원래 위치로 복귀..
         card.transform.SetSiblingIndex(card.originIndex);
     }
@@ -252,18 +283,19 @@ public class CardManager : MonoBehaviour
     {
         isMyCardDrag = false;
 
-        // if(eCardState != ECardState.CanMouseDrag){
-        //     return;
-        // }
-
-        // if(onMyCardArea)
-        //     EntityManager.Inst.RemoveMyEmptyEntity();
-        // else {
-        //     TryPutCard(true);
-        // }
 
         // 제자리로 천천히 이동
         selectCard.MoveTransform(selectCard.originPRS, true, 0.4f);
+        
+        // 여기서 공격을 하자 그럼
+        if(selectCard && EnemyManager.Inst.selectEnemy)
+        {
+            Debug.Log("공격 가능함");
+            Attack(EnemyManager.Inst.selectEnemy, selectCard); 
+        }
+
+        selectCard = null;
+        EnemyManager.Inst.selectEnemy = null;
     }
 
     void CardDrag()

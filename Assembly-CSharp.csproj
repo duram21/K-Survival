@@ -51,6 +51,7 @@
     <Compile Include="Assets\Script\Reposition.cs" />
     <Compile Include="Assets\Script\Player.cs" />
     <Compile Include="Assets\Script\Utils.cs" />
+    <Compile Include="Assets\Script\Spawner.cs" />
     <Compile Include="Assets\Script\Util.cs" />
     <Compile Include="Assets\Script\UI\CardShowBtn.cs" />
     <Compile Include="Assets\Script\Damage.cs" />
@@ -58,6 +59,7 @@
     <Compile Include="Assets\Script\CardManager.cs" />
     <Compile Include="Assets\Script\GameManager.cs" />
     <Compile Include="Assets\Script\Card.cs" />
+    <Compile Include="Assets\Script\PoolManager.cs" />
     <Compile Include="Assets\Script\Order.cs" />
     <Compile Include="Assets\Script\Enemy.cs" />
     <Compile Include="Assets\Script\EnemyManager.cs" />

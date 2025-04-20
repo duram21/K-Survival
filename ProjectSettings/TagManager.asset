@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Ground
   - Area
+  - Monster
   layers:
   - Default
   - TransparentFX
@@ -15,7 +16,7 @@ TagManager:
   - UI
   - MyCardArea
   - Enemy
-  - 
+  - Monster
   - 
   - 
   - 

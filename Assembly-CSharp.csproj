@@ -70,6 +70,7 @@
     <Compile Include="Assets\Script\Order.cs" />
     <Compile Include="Assets\Script\Enemy.cs" />
     <Compile Include="Assets\Script\EnemyManager.cs" />
+    <Compile Include="Assets\Script\Gear.cs" />
     <Compile Include="Assets\Script\Monster.cs" />
   </ItemGroup>
   <ItemGroup>

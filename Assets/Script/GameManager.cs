@@ -5,6 +5,7 @@ public class GameManager : MonoBehaviour
     public static GameManager instance;
 
     [Header("# Game Control")]
+    public bool isLive;
     public float gameTime;
     public float maxGameTime = 20f;
 
@@ -19,6 +20,7 @@ public class GameManager : MonoBehaviour
     [Header("# GameObject")]
     public PoolManager pool;
     public Player player;
+    public LevelUp uiLevelUp;
 
     void Awake()
     {
@@ -28,11 +30,18 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         health = maxHealth;
+
+        // 임시 (캐릭터 선책)
+        uiLevelUp.Select(0);
     }
 
 
     void Update()
     {
+        if(!isLive)
+            return;
+
+            
         gameTime += Time.deltaTime;
 
         if(gameTime > maxGameTime)
@@ -50,6 +59,20 @@ public class GameManager : MonoBehaviour
         {
             level++;
             exp = 0;
+            uiLevelUp.Show();
         }
+    }
+
+    public void Stop()
+    {
+        isLive = false;
+        Time.timeScale = 0;
+    }
+
+    public void Resume()
+    {
+        isLive = true;
+        Time.timeScale = 1;
+
     }
 }

@@ -47,6 +47,9 @@ public class Monster : MonoBehaviour
 
     void FixedUpdate()
     {
+        if(!GameManager.instance.isLive)
+            return;
+
         if(!isLive || anim.GetCurrentAnimatorStateInfo(0).IsName("Hit"))
             return;
 
@@ -59,6 +62,9 @@ public class Monster : MonoBehaviour
 
     void LateUpdate()
     {
+        if(!GameManager.instance.isLive)
+            return;
+            
         if(!isLive)
             return;
 

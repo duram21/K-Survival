@@ -1,4 +1,7 @@
+using System.Collections;
+using System.Xml.Serialization;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -21,6 +24,7 @@ public class GameManager : MonoBehaviour
     public PoolManager pool;
     public Player player;
     public LevelUp uiLevelUp;
+    public GameObject uiResult;
 
     void Awake()
     {
@@ -35,6 +39,26 @@ public class GameManager : MonoBehaviour
         uiLevelUp.Select(0);
 
         isLive = true;
+    }
+
+    public void GameOver()
+    {
+        StartCoroutine(GameOverRoutine());
+    }
+
+    IEnumerator GameOverRoutine()
+    {
+        isLive  = false;
+
+        yield return new WaitForSeconds(0.5f);
+
+        uiResult.SetActive(true);
+        Stop(); 
+    }
+
+    public void GameRetry()
+    {
+        SceneManager.LoadScene(0);
     }
 
 

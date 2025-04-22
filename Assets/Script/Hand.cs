@@ -7,6 +7,8 @@ public class Hand : MonoBehaviour
 
     SpriteRenderer player;
 
+    Player pplayer ;
+
     Vector3 rightPos = new Vector3(0.35f, -0.15f, 0);
     Vector3 rightPosReverse = new Vector3(-0.15f, -0.15f, 0);
     Quaternion leftRot = Quaternion.Euler(0, 0, -35);
@@ -17,6 +19,7 @@ public class Hand : MonoBehaviour
     void Awake()
     {
         player = GetComponentsInParent<SpriteRenderer>()[1];
+        pplayer = GameManager.instance.player;
     }
 
     void LateUpdate()
@@ -29,11 +32,16 @@ public class Hand : MonoBehaviour
             spriter.flipY = isReverse;
             spriter.sortingOrder = isReverse ? 4 : 6;
         }
-        else // 원거리 무기
+        else if (pplayer.scanner.nearestTarget)
         {
-            transform.localPosition = isReverse ? rightPosReverse : rightPos;
-            spriter.flipX = isReverse;
-            spriter.sortingOrder = isReverse ? 6 : 4;
+            Vector3 targetPos = pplayer.scanner.nearestTarget.position;
+            Vector3 dir = targetPos - transform.position;
+            transform.localRotation = Quaternion.FromToRotation(Vector3.right, dir);
+
+            bool isRotA = transform.localRotation.eulerAngles.z > 90 && transform.localRotation.eulerAngles.z < 270;
+            bool isRotB = transform.localRotation.eulerAngles.z < -90 && transform.localRotation.eulerAngles.z > -270;
+            spriter.flipY = isRotA || isRotB;
+            spriter.sortingOrder = 6; 
         }
     }
 

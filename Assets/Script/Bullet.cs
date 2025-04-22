@@ -17,7 +17,7 @@ public class Bullet : MonoBehaviour
         this.damage = damage;
         this.per = per;
 
-        if (per > -1)
+        if (per >= 0)
         {
             rigid.linearVelocity = dir * 15f;
         }
@@ -25,12 +25,12 @@ public class Bullet : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D collision)
     {
-        if(!collision.CompareTag("Monster") || per == -1)
+        if(!collision.CompareTag("Monster") || per == -100)
             return;
 
         per--;
 
-        if(per == -1)
+        if(per < 0)
         {   
             rigid.linearVelocity = Vector2.zero;
             gameObject.SetActive(false);
@@ -38,5 +38,11 @@ public class Bullet : MonoBehaviour
 
     }
 
+    void OnTriggerExit2D(Collider2D collision)
+    {
+        if(!collision.CompareTag("Area") || per == -100)
+            return;
 
+        gameObject.SetActive(false);
+    }
 }

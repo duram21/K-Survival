@@ -46,8 +46,32 @@ public class AchieveManager : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void LateUpdate()
     {
-        
+        foreach (Achieve achieve in achieves)
+        {
+            CheckAchieve(achieve);
+        }
     }
+
+    void CheckAchieve(Achieve achieve)
+    {
+        bool isAchieve = false;
+
+        switch (achieve)
+        {
+            case Achieve.UnlockPotato:
+                isAchieve = GameManager.instance.kill >= 10;
+                break;
+            case Achieve.UnlockBean:
+                isAchieve = GameManager.instance.gameTime == GameManager.instance.maxGameTime;
+                break;
+        }
+
+        if(isAchieve && PlayerPrefs.GetInt(achieve.ToString()) == 0)
+        {
+            PlayerPrefs.SetInt(achieve.ToString(), 1);
+        }
+    }
+
 }

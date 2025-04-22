@@ -50,6 +50,7 @@
   <ItemGroup>
     <Compile Include="Assets\Script\ItemData.cs" />
     <Compile Include="Assets\Script\Reposition.cs" />
+    <Compile Include="Assets\Script\AudioManager.cs" />
     <Compile Include="Assets\Script\Player.cs" />
     <Compile Include="Assets\Script\Scanner.cs" />
     <Compile Include="Assets\Script\UI\HUD.cs" />

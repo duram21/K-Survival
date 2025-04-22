@@ -13,6 +13,7 @@ public class GameManager : MonoBehaviour
     public float maxGameTime = 20f;
 
     [Header("# Player Info")]
+    public int playerId; 
     public float health;
     public float maxHealth = 100;
     public int level;
@@ -32,12 +33,15 @@ public class GameManager : MonoBehaviour
         instance = this;   
     }
 
-    public void GameStart()
+    public void GameStart(int id)
     {
+        playerId = id;
         health = maxHealth;
 
+        player.gameObject.SetActive(true);
+
         // 임시 (캐릭터 선책)
-        uiLevelUp.Select(0);
+        uiLevelUp.Select(playerId % 2);
 
         Resume();
     }
@@ -102,7 +106,7 @@ public class GameManager : MonoBehaviour
     {
         if(!isLive)
             return;
-            
+
         exp++;
 
         if(exp == nextExp[Mathf.Min(level, nextExp.Length-1)])

@@ -10,7 +10,7 @@ public class Monster : MonoBehaviour
     Animator anim;
     public Rigidbody2D target;
 
-    bool isLive;
+    public bool isLive;
 
     Rigidbody2D rigid;
     Collider2D coll;
@@ -21,20 +21,27 @@ public class Monster : MonoBehaviour
     {
         rigid = GetComponent<Rigidbody2D>();
         coll = GetComponent<Collider2D>();
-        spriter = GetComponent<SpriteRenderer>();   
+        spriter = GetComponent<SpriteRenderer>();
         anim = GetComponent<Animator>();
         wait = new WaitForFixedUpdate();
     }
 
     void OnEnable()
     {
-        target = GameManager.instance.player.GetComponent<Rigidbody2D>();
-        isLive = true;
+        isLive = false;
         coll.enabled = true;
         rigid.simulated = true;
         spriter.sortingOrder = 2;
         anim.SetBool("Dead", false);
         health = maxHealth;
+        StartCoroutine(ActivateAfterDelay());
+    }
+
+    IEnumerator ActivateAfterDelay()
+    {
+        yield return new WaitForSeconds(0.1f); // 0.1초 정도만 줘도 충분함
+        target = GameManager.instance.player.GetComponent<Rigidbody2D>();
+        isLive = true;
     }
 
     public void Init(SpawnData data)
@@ -47,10 +54,10 @@ public class Monster : MonoBehaviour
 
     void FixedUpdate()
     {
-        if(!GameManager.instance.isLive)
+        if (!GameManager.instance.isLive)
             return;
 
-        if(!isLive || anim.GetCurrentAnimatorStateInfo(0).IsName("Hit"))
+        if (!isLive || anim.GetCurrentAnimatorStateInfo(0).IsName("Hit"))
             return;
 
         Vector2 dirVec = target.position - rigid.position;
@@ -62,13 +69,13 @@ public class Monster : MonoBehaviour
 
     void LateUpdate()
     {
-        if(!GameManager.instance.isLive)
+        if (!GameManager.instance.isLive)
             return;
 
-        if(!isLive)
+        if (!isLive)
             return;
 
-        spriter.flipX = target.position.x  < rigid.position.x;
+        spriter.flipX = target.position.x < rigid.position.x;
     }
 
     void OnTriggerEnter2D(Collider2D collision)
@@ -79,7 +86,7 @@ public class Monster : MonoBehaviour
         health -= collision.GetComponent<Bullet>().damage;
         StartCoroutine(KnockBack());
 
-        if(health > 0)
+        if (health > 0)
         {
             anim.SetTrigger("Hit");
             AudioManager.instance.PlaySfx(AudioManager.Sfx.Hit);
@@ -92,19 +99,19 @@ public class Monster : MonoBehaviour
             rigid.simulated = false;
             spriter.sortingOrder = 1;
             anim.SetBool("Dead", true);
-            
-            
+
+
             GameManager.instance.kill++;
             GameManager.instance.GetExp();
 
-            if(GameManager.instance.isLive)
+            if (GameManager.instance.isLive)
                 AudioManager.instance.PlaySfx(AudioManager.Sfx.Dead);
         }
     }
 
     IEnumerator KnockBack()
     {
-        yield return wait; 
+        yield return wait;
         Vector3 playerPos = GameManager.instance.player.transform.position;
         Vector3 dirVec = transform.position - playerPos;
         rigid.AddForce(dirVec.normalized * 3, ForceMode2D.Impulse);

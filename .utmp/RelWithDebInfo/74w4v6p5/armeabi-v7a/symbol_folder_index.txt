@@ -1,0 +1,1 @@
+C:\Users\admin\K-Survival\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\cxx\RelWithDebInfo\74w4v6p5\obj\armeabi-v7a

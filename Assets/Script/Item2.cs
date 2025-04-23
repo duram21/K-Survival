@@ -41,6 +41,10 @@ public class Item2 : MonoBehaviour
             case ItemData.ItemType.Shoe:
                 textDesc.text = string.Format(data.itemDesc, data.damages[level] * 100);
                 break;
+            default:
+                textDesc.text = data.itemDesc;
+                break;
+                
         }
     }
 
